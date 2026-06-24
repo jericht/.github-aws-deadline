@@ -18,11 +18,11 @@ jobs:
     environment: release
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{inputs.tag}}
           fetch-depth: 0
-          token: ${{ secrets.CI_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -57,9 +57,17 @@ jobs:
           done
           shopt -u nullglob
 
+      - name: List workspace contents
+        run: |
+          echo "=== Current working directory ==="
+          pwd
+          echo ""
+          echo "=== Recursive listing ==="
+          find . -not -path './.git/*' | sort
+
       - name: PushRelease
         env:
-          GH_TOKEN: ${{ secrets.CI_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RELEASE_NOTES=$(python .github/scripts/get_latest_changelog.py)
           TAG=${{inputs.tag}}
