@@ -48,6 +48,14 @@ jobs:
           echo "::add-mask::$PGP_KEY_PASSPHRASE"
           echo "PGP_KEY_PASSPHRASE=$PGP_KEY_PASSPHRASE" >> $GITHUB_ENV
 
+      - name: List workspace contents
+        run: |
+          echo "=== Current working directory ==="
+          pwd
+          echo ""
+          echo "=== Recursive listing ==="
+          find . -not -path './.git/*' | sort
+
       - name: Sign
         run: |
           shopt -s nullglob

@@ -117,7 +117,15 @@ jobs:
       - name: List artifacts
         run: ls -la dist/
 
+      # Create dist_extras so upload-artifact sees multiple paths.
+      # This forces it to use the workspace root as the common ancestor,
+      # preserving "dist/" in the artifact (matching reusable_release.yml's
+      # build-artifact/dist/* glob). A single path strips the directory name.
+      - run: mkdir -p dist_extras
+
       - uses: actions/upload-artifact@v4
         with:
           name: build-artifact
-          path: dist
+          path: |
+            dist
+            dist_extras
